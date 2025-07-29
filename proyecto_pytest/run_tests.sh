@@ -25,10 +25,7 @@ fi
 
 # --- PASO DE DEPURACIÓN 3: EXAMINAR EL CONTENIDO DE 'venv' ---
 echo "--- Depuración: Contenido de la carpeta 'venv' ---"
-if [ -d "venv/bin" ]; then
-    echo "Contenido de 'venv/bin':"
-    ls -F venv/bin
-elif [ -d "venv/Scripts" ]; then
+if [ -d "venv/Scripts" ]; then
     echo "Contenido de 'venv/Scripts':"
     ls -F venv/Scripts
 else
@@ -38,10 +35,7 @@ fi
 
 # --- PASO 4: INTENTAR ACTIVAR EL ENTORNO VIRTUAL ---
 echo "--- Activando el entorno virtual ---"
-if [ -f "venv/bin/activate" ]; then
-    echo "Activando entorno virtual para Unix/Linux desde venv/bin/activate..."
-    source venv/bin/activate
-elif [ -f "venv/Scripts/activate" ]; then # Para Windows (con shell compatible con Bash como Git Bash)
+if [ -f "venv/Scripts/activate" ]; then # Para Windows (con shell compatible con Bash como Git Bash)
     echo "Activando entorno virtual para Windows desde venv/Scripts/activate..."
     # En un shell tipo Bash (como "Execute Shell" en Jenkins con Git Bash), usar '.' es el equivalente a 'source'.
     # 'source' puede no funcionar correctamente para scripts de Windows.
