@@ -1,40 +1,15 @@
 #!/bin/bash
-echo "Iniciando ejecucion de pruebas en Jenkins..." 
+echo "Iniciando ejecucion de pruebas en Jenkins..."
 
-#verificar si el entorno virutal existe
-echo "activando el entorno virtual"
-if [ -d "venv" ]; then
-    rm -rf venv
-    echo "Entorno virtual previo eliminado."
-fi
-
+# Preparar entorno virtual
+rm -rf venv
 python3 -m venv venv
-source venv/bin/activate
 
-echo "Listando contenido de venv:"
-ls -l venv
-echo "Listando contenido de venv/bin:"
-ls -l venv/bin
-echo "Listando contenido de venv/Scripts:"
-ls -l venv/Scripts
-#Activar el entorno virtual correctamente
-if [ -f "venv/bin/activate" ]; then
-    source venv/bin/activate
-elif [ -f "venv/Scripts/activate" ]; then #Para Windows
-    source venv/Scripts/activate
-else
-    echo "Error: No se pudo acitvar el entorno virtual."
-    exit 1
-fi
+echo "Instalando dependencias..."
+venv/bin/python -m pip install --upgrade pip
+venv/bin/python -m pip install -r requirements.txt
 
-
-#VErificar si pip esta instalado correctamente
-echo "instalando dependencias"
-pip install --upgrade pip
-pip install -r requirements.txt
-
-#Ejecutar las pruebas
 echo "Ejecutando pruebas con pytest..."
 venv/bin/python -m pytest tests/ --junitxml=reports/test-results.xml --html=reports/test-results.html --self-contained-html
 
-echo "pruebas finalizadas resultados en reports"
+echo "Pruebas finalizadas. Resultados en reports"
