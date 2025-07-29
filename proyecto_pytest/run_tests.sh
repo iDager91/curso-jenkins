@@ -12,9 +12,9 @@ fi
 if [ -f "venv/bin/activate" ]; then
     echo "bin"
     source venv/bin/activate
-elif [ -f "C:\Users\Lalo\Documents\Jenkins\ARCHIVOS\curso-jenkins\proyecto_pytest\venv\Scripts\activate" ]; then #Para Windows
+elif [ -f "C:/Users/Lalo/Documents/Jenkins/ARCHIVOS/curso-jenkins/proyecto_pytest/venv/Scripts/activate" ]; then #Para Windows
     echo "Scrpits"
-    source C:\Users\Lalo\Documents\Jenkins\ARCHIVOS\curso-jenkins\proyecto_pytest\venv\Scripts\activate
+    source C:/Users/Lalo/Documents/Jenkins/ARCHIVOS/curso-jenkins/proyecto_pytest/venv/Scripts/activate
 else
     echo "Error: No se pudo acitvar el entorno virtual."
     exit 1
