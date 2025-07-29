@@ -10,10 +10,10 @@ if [ ! -d "venv" ]; then
 fi
 
 #Activar el entorno virtual correctamente
-if [ -f "venv/bin/activate" ]; then
-    source venv/bin/activate
-elif [ -f "venv/Scripts/activate" ]; then #Para Windows
-    source venv/Scripts/activate
+if [ -f "env/bin/activate" ]; then
+    source env/bin/activate
+elif [ -f "env/Scripts/activate" ]; then #Para Windows
+    source env/Scripts/activate
 else
     echo "Error: No se pudo acitvar el entorni virtual."
     exit 1
@@ -26,6 +26,6 @@ pip install -r requirements.txt
 
 #Ejecutar las pruebas
 echo "Ejecutando pruebas con pytest..."
-venv/bin/python -m pytest tests/ --junitxml=reports/test-results.xml --html=reports/test-results.html --self-contained-html
+env/bin/python -m pytest tests/ --junitxml=reports/test-results.xml --html=reports/test-results.html --self-contained-html
 
 echo "pruebas finalizadas resultados en reports"
