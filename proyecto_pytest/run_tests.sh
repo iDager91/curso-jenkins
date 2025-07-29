@@ -10,12 +10,23 @@ if [ ! -d "venv" ]; then
 fi
 
 #Activar el entorno virtual correctamente
+# if [ -f "venv/bin/activate" ]; then
+#     source venv/bin/activate
+# elif [ -f "venv/Scripts/activate" ]; then #Para Windows
+#     source venv/Scripts/activate
+# else
+#     echo "Error: No se pudo acitvar el entorno virtual."
+#     exit 1
+# fi
 if [ -f "venv/bin/activate" ]; then
+    echo "Activando entorno virtual para Unix/Linux..."
     source venv/bin/activate
-elif [ -f "venv/Scripts/activate" ]; then #Para Windows
-    source venv/Scripts/activate
+elif [ -f "venv/Scripts/activate" ]; then
+    echo "Activando entorno virtual para Windows (Shell con compatibilidad Unix como Git Bash)..."
+    # El punto (.) es un alias de 'source' para Bash, que funciona bien para activar scripts de venv en Windows
+    . venv/Scripts/activate
 else
-    echo "Error: No se pudo acitvar el entorno virtual."
+    echo "Error: No se pudo activar el entorno virtual. Asegúrate de que 'venv' exista y esté en la ubicación correcta."
     exit 1
 fi
 
