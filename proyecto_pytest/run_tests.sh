@@ -8,6 +8,12 @@ if [ ! -d "venv" ]; then
     python3 -m venv venv
 fi
 
+echo "Listando contenido de venv:"
+ls -l venv
+echo "Listando contenido de venv/bin:"
+ls -l venv/bin
+echo "Listando contenido de venv/Scripts:"
+ls -l venv/Scripts
 #Activar el entorno virtual correctamente
 if [ -f "venv/bin/activate" ]; then
     source venv/bin/activate
