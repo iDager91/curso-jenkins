@@ -1,51 +1,76 @@
 #!/bin/bash
 echo "Iniciando ejecucion de pruebas en Jenkins..."
 
-# --- PASO DE DEPURACIÓN 1: VERIFICAR LA UBICACIÓN ACTUAL ---
-echo "--- Depuración: Verificando ubicación actual ---"
-echo "Directorio actual (pwd): $(pwd)"
-echo "Contenido del directorio actual:"
+# --- PASO DE DEPURACIÓN 1: VERIFICAR LA UBICACIÓN INICIAL ---
+echo "--- Depuración: Verificando ubicación inicial ---"
+echo "Directorio de trabajo actual (pwd): $(pwd)"
+echo "Contenido del directorio actual (ls -F):"
 ls -F
 
-# --- PASO DE DEPURACIÓN 2: VERIFICAR LA EXISTENCIA DE LA CARPETA 'venv' ---
-echo "--- Depuración: Buscando 'venv' ---"
+# --- PASO DE DEPURACIÓN 2: CREACIÓN DEL ENTORNO VIRTUAL ---
+echo "--- Depuración: Intentando crear/verificar 'venv' ---"
 if [ ! -d "venv" ]; then
-    echo "Entorno virtual 'venv' no encontrado. Creándolo..."
-    # Asegúrate de que 'python3' apunte a la versión correcta de Python
-    python3 -m venv venv
-    # Verificar si la creación fue exitosa
-    if [ ! -d "venv" ]; then
-        echo "Error: La creación del entorno virtual falló. No se encontró 'venv' después de intentar crearlo."
+    echo "Entorno virtual 'venv' no encontrado en $(pwd). Intentando crearlo..."
+    # Intenta usar 'python' en lugar de 'python3' si 'python3' no está en el PATH de Jenkins en Windows.
+    # O usa la ruta completa si la conoces, por ejemplo: /usr/bin/python3 -m venv venv
+    # En Windows, podrías necesitar 'py -3 -m venv venv' o la ruta completa a python.exe
+    python -m venv venv  # Prueba con 'python' primero
+    # python3 -m venv venv # Si el anterior falla, descomenta este y comenta el de arriba
+
+    # Verifica si el comando anterior fue exitoso
+    if [ $? -ne 0 ]; then
+        echo "ERROR CRÍTICO: La creación del entorno virtual falló con código de salida $?. Revisa el PATH de Python y los permisos."
         exit 1
     fi
-    echo "Entorno virtual 'venv' creado exitosamente."
+    echo "Entorno virtual 'venv' creado (o se intentó crear)."
 else
-    echo "La carpeta 'venv' ya existe."
+    echo "La carpeta 'venv' ya existe en $(pwd)."
 fi
 
-# --- PASO DE DEPURACIÓN 3: EXAMINAR EL CONTENIDO DE 'venv' ---
-echo "--- Depuración: Contenido de la carpeta 'venv' ---"
-if [ -d "venv/Scripts" ]; then
-    echo "Contenido de 'venv/Scripts':"
-    ls -F venv/Scripts
+# --- PASO DE DEPURACIÓN 3: RE-VERIFICAR LA EXISTENCIA DE 'venv' Y SUS SUB-CARPETAS INMEDIATAMENTE DESPUÉS ---
+echo "--- Depuración: Verificando el estado de 'venv' después de la creación/verificación ---"
+if [ -d "venv" ]; then
+    echo "La carpeta 'venv' existe."
+    echo "Contenido de 'venv':"
+    ls -F venv
+
+    if [ -d "venv/bin" ]; then
+        echo "¡ENCONTRADA: venv/bin!"
+        echo "Contenido de 'venv/bin':"
+        ls -F venv/bin
+    elif [ -d "venv/Scripts" ]; then
+        echo "¡ENCONTRADA: venv/Scripts!"
+        echo "Contenido de 'venv/Scripts':"
+        ls -F venv/Scripts
+    else
+        echo "ADVERTENCIA: Ni 'venv/bin' ni 'venv/Scripts' fueron encontrados dentro de 'venv'."
+        echo "Esto significa que el entorno virtual no se creó correctamente o está dañado."
+        echo "Asegúrate de que 'python -m venv venv' funcione fuera de Jenkins."
+        exit 1 # Salir si las subcarpetas clave no existen
+    fi
 else
-    echo "No se encontraron las subcarpetas 'venv/bin' ni 'venv/Scripts'. Esto es un problema."
+    echo "ERROR: La carpeta 'venv' NO existe después de intentar crearla. Fallo en la creación del venv."
     exit 1
 fi
 
 # --- PASO 4: INTENTAR ACTIVAR EL ENTORNO VIRTUAL ---
 echo "--- Activando el entorno virtual ---"
-if [ -f "venv/Scripts/activate" ]; then # Para Windows (con shell compatible con Bash como Git Bash)
-    echo "Activando entorno virtual para Windows desde venv/Scripts/activate..."
-    # En un shell tipo Bash (como "Execute Shell" en Jenkins con Git Bash), usar '.' es el equivalente a 'source'.
-    # 'source' puede no funcionar correctamente para scripts de Windows.
-    . venv/Scripts/activate
+if [ -f "venv/bin/activate" ]; then
+    echo "Activando entorno virtual (Unix/Linux)..."
+    source venv/bin/activate
+elif [ -f "venv/Scripts/activate" ]; then # Para Windows con Bash (Git Bash)
+    echo "Activando entorno virtual (Windows con Bash/Git Bash)..."
+    . venv/Scripts/activate # El punto '.' es el alias de 'source' para Bash
 else
-    echo "Error FINAL: No se pudo activar el entorno virtual. El script 'activate' no se encontró en 'venv/bin' ni en 'venv/Scripts'."
+    echo "ERROR FINAL: No se pudo activar el entorno virtual. El script 'activate' no se encontró."
     exit 1
 fi
 
 # --- PASO 5: VERIFICAR LA ACTIVACIÓN ---
-echo "--- Verificando activación del entorno virtual ---"
+echo "--- Verificando activación ---"
 which python
 python --version
+
+# Aquí irían tus comandos de ejecución de pruebas
+# pip install -r requirements.txt
+# pytest
