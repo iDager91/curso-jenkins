@@ -34,11 +34,7 @@ if [ -d "venv" ]; then
     echo "Contenido de 'venv':"
     ls -F venv
 
-    if [ -d "venv/bin" ]; then
-        echo "¡ENCONTRADA: venv/bin!"
-        echo "Contenido de 'venv/bin':"
-        ls -F venv/bin
-    elif [ -d "venv/Scripts" ]; then
+    if [ -d "venv/Scripts" ]; then
         echo "¡ENCONTRADA: venv/Scripts!"
         echo "Contenido de 'venv/Scripts':"
         ls -F venv/Scripts
@@ -55,10 +51,7 @@ fi
 
 # --- PASO 4: INTENTAR ACTIVAR EL ENTORNO VIRTUAL ---
 echo "--- Activando el entorno virtual ---"
-if [ -f "venv/bin/activate" ]; then
-    echo "Activando entorno virtual (Unix/Linux)..."
-    source venv/bin/activate
-elif [ -f "venv/Scripts/activate" ]; then # Para Windows con Bash (Git Bash)
+if [ -f "venv/Scripts/activate" ]; then # Para Windows con Bash (Git Bash)
     echo "Activando entorno virtual (Windows con Bash/Git Bash)..."
     . venv/Scripts/activate # El punto '.' es el alias de 'source' para Bash
 else
