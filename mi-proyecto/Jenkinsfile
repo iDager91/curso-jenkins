@@ -32,3 +32,4 @@ pipeline {
             echo "Este bloque se ejecuta si el pipeline falla"
         }
     }
+}
