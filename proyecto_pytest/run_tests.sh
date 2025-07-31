@@ -12,7 +12,7 @@ venv/bin/python -m pip install -r requirements.txt
 echo "estamos en el directorio: "
 pwd
 mkdir -p reports
-
+ls
 echo "Ejecutando pruebas con pytest..."
 venv/bin/python -m pytest tests/ --junitxml=reports/test-results.xml --html=reports/test-results.html --self-contained-html
 
