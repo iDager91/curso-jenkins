@@ -8,7 +8,11 @@ python3 -m venv venv
 echo "Instalando dependencias..."
 venv/bin/python -m pip install --upgrade pip
 venv/bin/python -m pip install -r requirements.txt
+
+echo "estamos en el directorio: "
+pwd
 mkdir -p reports
+
 echo "Ejecutando pruebas con pytest..."
 venv/bin/python -m pytest tests/ --junitxml=reports/test-results.xml --html=reports/test-results.html --self-contained-html
 
